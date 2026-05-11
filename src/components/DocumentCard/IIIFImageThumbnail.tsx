@@ -39,7 +39,7 @@ export const IIIFImageThumbnail = (props: IIIFImageThumbnailProps) => {
         setAuthToken(data.session?.access_token);
       }
     });
-  }, []);
+  }, [isUploadedFile, thumbnailURL]);
 
   useEffect(() => {
     if (!authToken || !thumbnailURL) return;
