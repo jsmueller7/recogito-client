@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer';
 import { render } from 'react-email';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import { encrypt } from '@backend/crypto';
-import { useTranslation } from 'src/i18n/serverless';
+import { getTranslation } from 'src/i18n/serverless';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -85,7 +85,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   );
 
   const body = await request.json();
-  const { t, lang } = await useTranslation(request, body);
+  const { t, lang } = await getTranslation(request, body);
 
   // Create the user and then send an invite
   const inviteResp = await supa.auth.admin.createUser({

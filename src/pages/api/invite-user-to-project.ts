@@ -6,7 +6,7 @@ import nodemailer from 'nodemailer';
 import { render } from 'react-email';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import type { ApiPostInviteUserToProject } from 'src/Types';
-import { useTranslation } from 'src/i18n/serverless';
+import { getTranslation } from 'src/i18n/serverless';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -29,7 +29,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     });
 
   const body: ApiPostInviteUserToProject = await request.json();
-  const { t, lang } = await useTranslation(request, body);
+  const { t, lang } = await getTranslation(request, body);
 
   const respData = [];
   // Create the invites
