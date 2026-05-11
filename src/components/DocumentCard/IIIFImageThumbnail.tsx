@@ -62,7 +62,7 @@ export const IIIFImageThumbnail = (props: IIIFImageThumbnailProps) => {
       .catch((error) => {
         console.error('Failed thumbnail download', error);
       });
-  }, [authToken]);
+  }, [authToken, thumbnailURL]);
 
   useEffect(() => {
     // Cleanup: free resources properly on unmount
