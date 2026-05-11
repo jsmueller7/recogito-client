@@ -10,7 +10,7 @@ const PALETTE = ColorBrewerDark2_8;
 
 const NO_LAYER: Color = '#727272';
 
-export const userColorByLayer = (
+export const useColorByLayer = (
   layers: DocumentLayer[] | undefined, 
   layerNames: Map<string, string>
 ): ColorCoding => {
