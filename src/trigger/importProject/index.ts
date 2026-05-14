@@ -209,7 +209,7 @@ const getRecords = (
       };
     });
   } catch (e) {
-    throw new Error(`Malformed JSON in ${entryName}: ${(e as Error).message}`);
+    throw new Error(`Malformed JSON in ${entryName}: ${(e as Error).message}`, { cause: e });
   }
 
   return records;
