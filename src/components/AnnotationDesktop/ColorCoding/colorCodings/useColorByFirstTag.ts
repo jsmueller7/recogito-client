@@ -17,16 +17,20 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
 
   const tags = useMemo(() => enumerateTags(annotations), [annotations]);
 
+  const vocabularyJSON = JSON.stringify(vocabulary);
+
   const getColor = useMemo(() => {
     const palette = createPalette(PALETTE);
 
-    const getColor = (tag: string)  => {
-      const preset = vocabulary.find(t => t.label === tag)?.color as Color;
+    const parsedVocabulary = JSON.parse(vocabularyJSON) as VocabularyTerm[];
+
+    const getColorFn = (tag: string)  => {
+      const preset = parsedVocabulary.find(t => t.label === tag)?.color as Color;
       return preset || palette.getColor(tag);
     }
 
-    return getColor;
-  }, [JSON.stringify(vocabulary), tags.join('-')]);
+    return getColorFn;
+  }, [vocabularyJSON]);
 
   const style = useMemo(() => {
     return (annotation: SupabaseAnnotation): Color => {
@@ -44,8 +48,8 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
 
   const legend = useMemo(() => {
     return tags.map(tag => ({ color: getColor(tag.label) as Color, label: tag.label }));
-  }, [tags.join('-')]);
+  }, [getColor, tags]);
 
-  return useMemo(() => ({ name: 'tag', style, legend }), [style, legend]); 
+  return useMemo(() => ({ name: 'tag', style, legend }), [style, legend]);
 
 }
