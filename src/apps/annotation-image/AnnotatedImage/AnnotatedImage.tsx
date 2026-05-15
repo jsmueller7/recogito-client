@@ -155,7 +155,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true,
     drawer: 'canvas',
-  }), [tilesource]);
+  }), [tilesource, authToken]);
 
   const selectAction = useCallback((annotation: SupabaseAnnotation) => {
     if (props.isLocked) return UserSelectAction.SELECT;
@@ -177,12 +177,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   }, [annoRef, props.activeLayer?.id, policies, props.isLocked]);
 
   useEffect(() => {
-    if (props.tool) {
-      if (!drawingEnabled)
-        setDrawingEnabled(true);
-    } else {
-      setDrawingEnabled(false);
-    }
+    setDrawingEnabled(Boolean(props.tool));
   }, [props.tool]);
 
   const onInitialSelectError = (annotationId: string) => {
