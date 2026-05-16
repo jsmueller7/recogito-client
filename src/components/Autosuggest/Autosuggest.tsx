@@ -150,30 +150,33 @@ export const Autosuggest = (props: AutosuggestProps) => {
           )}
         </Popover.Anchor>
 
-        <Popover.Content 
-          onOpenAutoFocus={evt => evt.preventDefault()}
-          sideOffset={8}
-          align="start">
-          <ul>
-            {suggestions.map((term, index) => (
-              <li 
-                key={`${term.label}-${index}`}
-                onClick={onSubmit}
-                onMouseEnter={() => setHighlightedIndex(index)}
-                className={highlightedIndex === index ? 'selected' : undefined}>
-                <span>{term.label}</span>
+        <Popover.Portal>
+          <Popover.Content 
+            className="autosuggest"
+            onOpenAutoFocus={evt => evt.preventDefault()}
+            sideOffset={8}
+            align="start">
+            <ul>
+              {suggestions.map((term, index) => (
+                <li 
+                  key={`${term.label}-${index}`}
+                  onClick={onSubmit}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                  className={highlightedIndex === index ? 'selected' : undefined}>
+                  <span>{term.label}</span>
 
-                {term.color && (
-                  <span 
-                    className="term-color"
-                    style={{
-                      backgroundColor: term.color
-                    }}/>
-                )}
-              </li>
-            ))}
-          </ul>
-        </Popover.Content>
+                  {term.color && (
+                    <span 
+                      className="term-color"
+                      style={{
+                        backgroundColor: term.color
+                      }}/>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </Popover.Content>
+        </Popover.Portal>
       </div>
     </Popover.Root>
   )
