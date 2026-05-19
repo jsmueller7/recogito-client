@@ -17,20 +17,16 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
 
   const tags = useMemo(() => enumerateTags(annotations), [annotations]);
 
-  const vocabularyJSON = JSON.stringify(vocabulary);
-
   const getColor = useMemo(() => {
     const palette = createPalette(PALETTE);
 
-    const parsedVocabulary = JSON.parse(vocabularyJSON) as VocabularyTerm[];
-
     const getColorFn = (tag: string)  => {
-      const preset = parsedVocabulary.find(t => t.label === tag)?.color as Color;
+      const preset = vocabulary.find(t => t.label === tag)?.color as Color;
       return preset || palette.getColor(tag);
     }
 
     return getColorFn;
-  }, [vocabularyJSON]);
+  }, [vocabulary]);
 
   const style = useMemo(() => {
     return (annotation: SupabaseAnnotation): Color => {
