@@ -1,7 +1,8 @@
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
+import type { TextAnnotationLike } from '@recogito/text-annotator';
+import type { PresentUser, AnnotationState, Color, Annotation } from '@annotorious/react';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -28,6 +29,7 @@ import type {
   HighlightStyle,
   HighlightStyleExpression,
   RecogitoTextAnnotator,
+  TEIAnnotation,
   TextAnnotation,
 } from '@recogito/react-text-annotator';
 import { useTranslation } from 'react-i18next';
@@ -216,17 +218,30 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   };
 
-  const sorting =
-    document.content_type === 'application/pdf'
-      ? (a: PDFAnnotation, b: PDFAnnotation) => {
-          const pages =
-            a.target.selector[0]?.pageNumber - b.target.selector[0]?.pageNumber;
-          return pages === 0
-            ? a.target.selector[0]?.start - b.target.selector[0]?.start
-            : pages;
-        }
-      : (a: TextAnnotation, b: TextAnnotation) =>
-          a.target.selector[0].start - b.target.selector[0].start;
+  const sorting: (a: TextAnnotationLike, b: TextAnnotationLike) => number = useMemo(() => {
+    if (document.content_type === 'application/pdf') {
+      return (a: Annotation, b: Annotation) => {
+        const pdfA = a as PDFAnnotation;
+        const pdfB = b as PDFAnnotation;
+
+        const pages =
+          pdfA.target.selector[0]?.pageNumber - 
+          pdfB.target.selector[0]?.pageNumber;
+
+        return pages === 0
+          ? pdfA.target.selector[0]?.start - pdfB.target.selector[0]?.start
+          : pages;
+      };
+    } else if (document.content_type === 'text/xml') {
+      return (a: TextAnnotationLike, b: TextAnnotationLike) =>
+        (a as TEIAnnotation).target.selector[0].position
+          .localeCompare((b as TEIAnnotation).target.selector[0].position);
+    } else {
+      return (a: TextAnnotationLike, b: TextAnnotationLike) =>
+        (a as TextAnnotation).target.selector[0].start - 
+        (b as TextAnnotation).target.selector[0].start;
+    }
+  }, [document.content_type]);
 
   const className = [
     'ta-annotated-text-container',
