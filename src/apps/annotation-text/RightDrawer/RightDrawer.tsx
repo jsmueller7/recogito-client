@@ -6,7 +6,7 @@ import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState
 import { Chats } from '@phosphor-icons/react';
 import { animated, easings, useSpring, useTransition } from '@react-spring/web';
 import { isMe, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
+import type { TextAnnotationLike } from '@recogito/text-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import type { Layer, Policies, VocabularyTerm } from 'src/Types';
 
@@ -26,7 +26,7 @@ interface RightDrawerProps {
 
   present: PresentUser[];
 
-  sorting?: ((a: PDFAnnotation, b: PDFAnnotation) => number);
+  sorting?: ((a: TextAnnotationLike, b: TextAnnotationLike) => number);
 
   style?: HighlightStyleExpression;
 
